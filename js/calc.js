@@ -51,14 +51,13 @@ function handleButtonClick(args) {
         return;
     }
 
-    console.log(action, value );
     lastOperatorElem.textContent = '';
     switch (action) {
         case 'number':
             updateValue(value);
             break;
         case 'decimal':
-            if (!currentExpression.includes('.')) {
+            if (!value_before_last_operator().includes('.')) {
                 updateValue(value);
             }
             break;
@@ -99,7 +98,7 @@ function handleButtonClick(args) {
 
 function updateValue(value) {
     // If current value is 0 or the new value is also 0, do not update the expression
-    if (currentExpression === '0' || value === '0') {
+    if (currentExpression === '0' || value === '0' && currentExpression === '0') {
         currentExpression = value;
     } else {
         currentExpression += value;
@@ -123,13 +122,29 @@ function updateDisplay() {
             topRow.style.display = 'block';
         }
     }
-    expressionElem.textContent = currentExpression;
-    resultElem.textContent = currentResult;
+    expressionElem.textContent = format_number_from_expression(currentExpression);
+    resultElem.textContent = format_number(currentResult);
 }
 
 function clearDisplay() {
     currentExpression = '';
     currentResult = '';
+}
+
+function format_number_from_expression(expression) {
+    // 1. Create a reusable formatter for US English comma separation
+    const formatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 20 });
+    
+    // 2. Find every standalone integer or decimal number in the string
+    return expression.replace(/\d+(\.\d+)?/g, (match) => {
+        // 3. Convert the matched string number to an actual number and format it
+        return formatter.format(Number(match));
+    });
+}
+
+function format_number(value) {
+    const formatted = Number(value).toLocaleString('en-US');
+    return value > 1000 ? formatted : value;
 }
 
 function backspace() {
@@ -138,7 +153,21 @@ function backspace() {
 
 function lastCharIsOperator() {
     const lastChar = currentExpression.slice(-1);
-    return ['+', '-', '*', '/', '%'].includes(lastChar);
+    return ['+', '-', 'x', '/', '%'].includes(lastChar);
+}
+
+function value_before_last_operator() {
+
+    if(currentExpression.length === 0) return '0';
+
+    // Split the string by any of the operators inside the brackets: +, -, x, /, or %
+    const parts = currentExpression.split(/[+\-x/%]/);
+
+    // Get the last item from the split array
+    const lastNumberStr = parts[parts.length - 1]; 
+
+    // Optional: Convert it from a string to an actual number
+    return lastNumberStr;
 }
 
 function moveResultToExpression(value) {
@@ -220,7 +249,7 @@ class ExpressionParser {
 
             const op = this.expression[this.pos];
 
-            if (op !== "*" && op !== "/" && op !== "%") {
+            if (op !== "x" && op !== "/" && op !== "%") {
                 break;
             }
 
@@ -228,7 +257,7 @@ class ExpressionParser {
 
             const value = this.parseFactor();
 
-            if (op === "*") {
+            if (op === "x") {
                 result *= value;
             }
             else if (op === "/") {
