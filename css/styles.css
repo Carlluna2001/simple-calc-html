@@ -1,0 +1,176 @@
+:root{
+    --operatorColor: #ee7a14;
+    --operatorHover: #f88622;
+    --boxshadowColor:#5435ff;
+}
+*{
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5);
+    background-size: 200% 200%;
+    animation: gradientBG 15s ease infinite;
+    overflow: hidden;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@font-face {
+    font-family: 'Digital7Italic';
+    src: url('../fonts/Digital7Italic-BW658.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;      
+}
+
+.container {
+    width:100%;
+    height: 100vh;
+    min-width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    animation: float 6s linear infinite;
+}
+
+.container .box {    
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 15px;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    box-shadow: 0px 20px 70px -40px var(--boxshadowColor);
+}
+.box .input_box {
+    width: 90%;
+    background-color: #d2d2d21a;
+    margin: 20px;
+    border-radius: 15px;
+}
+
+
+#display {
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    width: 100%;
+    padding: 10px;         
+    box-sizing: border-box;
+
+    font-family: 'Digital7Italic', sans-serif;        
+    background-color: #142F44;
+    color: #ffffff;
+    text-align: end;
+    font-size: 25px;
+    border: none;
+    outline: 2px solid #88aac2;
+    outline-offset: -4px;
+    gap: 10px;   
+    border-radius: 15px;
+    box-shadow: 0px 18px 26px -25px var(--boxshadowColor);    
+}
+
+.top-row {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bottom-row {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.separator {
+    align-self: center; 
+    text-align: center; 
+    width: 100%;
+    border-top: 1px solid #88aac2;
+}
+
+
+#lastOperator {
+    margin-right: auto;    /* Pushes the #expression element to the far right */
+}
+
+#expression {
+    text-align: right;     /* Right-aligns text inside the expression */
+}
+
+
+.box .input_box button {
+    width: 75px;
+    height: 75px;
+    cursor: pointer;
+    font-size: 32px;
+    margin: 2px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0px 18px 26px -25px var(--boxshadowColor);
+    transition: 0.1s;
+}
+.box .input_box, .clear_button, .delete_button{
+    font-weight: bold;
+}
+.box .input_box #op{
+    background-color: var(--operatorColor);
+}
+.box .input_box #op:hover{
+    background-color: var(--operatorHover);
+}
+.box .input_box button:active{
+    box-shadow: none;
+}
+
+/* Particles animation  */
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
